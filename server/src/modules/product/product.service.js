@@ -25,15 +25,29 @@ const createProduct = async (userId, payload) => {
     return product;
 };
 
-const getAllProducts = async () => {
+const getAllProducts = async (paginationOptions) => {
+    const { page, limit, skip } = paginationOptions;
+
     const products = await prisma.product.findMany({
         orderBy: {
             createdAt: "desc",
         },
+        skip,
+        take: limit,
     });
 
-    return products;
+    const total = await prisma.product.count();
+
+    return {
+        meta: {
+            page,
+            limit,
+            total,
+        },
+        data: products,
+    };
 };
+
 
 const getSingleProduct = async (id) => {
     const product = await prisma.product.findUnique({

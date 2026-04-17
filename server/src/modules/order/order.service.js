@@ -36,19 +36,37 @@ const createOrder = async (userId, payload) => {
     return order;
 };
 
-const getMyOrders = async (userId) => {
-    return prisma.order.findMany({
+const getMyOrders = async (userId, paginationOptions) => {
+    const { page, limit, skip } = paginationOptions;
+
+    const orders = await prisma.order.findMany({
         where: { userId },
         orderBy: {
             createdAt: "desc",
         },
+        skip,
+        take: limit,
     });
+
+    const total = await prisma.order.count({
+        where: { userId },
+    });
+
+    return {
+        meta: {
+            page,
+            limit,
+            total,
+        },
+        data: orders,
+    };
 };
 
-const getVendorOrders = async (userId) => {
+const getVendorOrders = async (userId, paginationOptions) => {
     const vendorProfile = await prisma.vendorProfile.findUnique({
         where: { userId },
     });
+
 
     if (!vendorProfile) {
         const error = new Error("Vendor profile not found");
@@ -56,14 +74,30 @@ const getVendorOrders = async (userId) => {
         throw error;
     }
 
-    return prisma.order.findMany({
+    const { page, limit, skip } = paginationOptions;
+
+    const orders = await prisma.order.findMany({
         where: { vendorId: vendorProfile.id },
         orderBy: {
             createdAt: "desc",
         },
+        skip,
+        take: limit,
     });
-};
 
+    const total = await prisma.order.count({
+        where: { vendorId: vendorProfile.id },
+    });
+
+    return {
+        meta: {
+            page,
+            limit,
+            total,
+        },
+        data: orders,
+    };
+};
 module.exports = {
     createOrder,
     getMyOrders,
