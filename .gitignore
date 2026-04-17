@@ -4,3 +4,7 @@ dist
 coverage
 logs
 *.log
+server/node_modules
+server/.env
+server/src/generated
+*.log
