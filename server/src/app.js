@@ -8,6 +8,7 @@ const vendorRoutes = require("./modules/vendor/vendor.routes");
 const certificationRoutes = require("./modules/certification/certification.routes");
 const productRoutes = require("./modules/product/product.routes");
 const rentalSpaceRoutes = require("./modules/rental-space/rentalSpace.routes");
+const orderRoutes = require("./modules/order/order.routes");
 
 const app = express();
 
@@ -21,5 +22,6 @@ app.use("/api/vendor", vendorRoutes);
 app.use("/api/certifications", certificationRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/rental-spaces", rentalSpaceRoutes);
+app.use("/api/orders", orderRoutes);
 
 module.exports = app;
