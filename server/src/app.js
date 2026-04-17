@@ -2,14 +2,16 @@ const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 
+const indexRoutes = require("./routes");
+const authRoutes = require("./modules/auth/auth.routes");
+
 const app = express();
 
 app.use(cors());
 app.use(helmet());
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.json({ success: true, message: "API is running" });
-});
+app.use("/", indexRoutes);
+app.use("/api/auth", authRoutes);
 
 module.exports = app;
