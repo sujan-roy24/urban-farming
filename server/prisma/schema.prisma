@@ -1,8 +1,61 @@
-generator client {
-  provider = "prisma-client-js"
+datasource db {
+  provider = "postgresql"
 }
 
-datasource db {
-  provider = "postgresql" // or mysql/sqlite depending on your DB
-  url      = env("DATABASE_URL")
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+enum Role {
+  ADMIN
+  VENDOR
+  CUSTOMER
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+enum CertificationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id            String         @id @default(uuid())
+  name          String
+  email         String         @unique
+  password      String
+  role          Role           @default(CUSTOMER)
+  status        UserStatus     @default(ACTIVE)
+  vendorProfile VendorProfile?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model VendorProfile {
+  id                  String                @id @default(uuid())
+  userId              String                @unique
+  farmName            String
+  farmLocation        String
+  certificationStatus CertificationStatus   @default(PENDING)
+  user                User                  @relation(fields: [userId], references: [id])
+  certifications      SustainabilityCert[]
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+}
+
+model SustainabilityCert {
+  id                 String                @id @default(uuid())
+  vendorId           String
+  certifyingAgency   String
+  certificationDate  DateTime
+  status             CertificationStatus   @default(PENDING)
+  vendor             VendorProfile         @relation(fields: [vendorId], references: [id])
+  createdAt          DateTime              @default(now())
+  updatedAt          DateTime              @updatedAt
 }
