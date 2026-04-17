@@ -11,12 +11,15 @@ const rentalSpaceRoutes = require("./modules/rental-space/rentalSpace.routes");
 const orderRoutes = require("./modules/order/order.routes");
 const communityRoutes = require("./modules/community/community.routes");
 const errorHandler = require("./middlewares/error.middleware");
+const setupSwagger = require("./config/swagger");
 
 const app = express();
 
 app.use(cors());
 app.use(helmet());
 app.use(express.json());
+
+setupSwagger(app);
 
 app.use("/", indexRoutes);
 app.use("/api/auth", authRoutes);
