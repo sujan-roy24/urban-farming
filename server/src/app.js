@@ -5,6 +5,7 @@ const helmet = require("helmet");
 const indexRoutes = require("./routes");
 const authRoutes = require("./modules/auth/auth.routes");
 const vendorRoutes = require("./modules/vendor/vendor.routes");
+const certificationRoutes = require("./modules/certification/certification.routes");
 
 const app = express();
 
@@ -15,5 +16,6 @@ app.use(express.json());
 app.use("/", indexRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/vendor", vendorRoutes);
+app.use("/api/certifications", certificationRoutes);
 
 module.exports = app;
