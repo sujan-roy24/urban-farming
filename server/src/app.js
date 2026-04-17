@@ -10,6 +10,7 @@ const productRoutes = require("./modules/product/product.routes");
 const rentalSpaceRoutes = require("./modules/rental-space/rentalSpace.routes");
 const orderRoutes = require("./modules/order/order.routes");
 const communityRoutes = require("./modules/community/community.routes");
+const errorHandler = require("./middlewares/error.middleware");
 
 const app = express();
 
@@ -25,5 +26,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/rental-spaces", rentalSpaceRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/community-posts", communityRoutes);
+
+app.use(errorHandler);
 
 module.exports = app;

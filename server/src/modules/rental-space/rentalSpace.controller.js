@@ -1,65 +1,45 @@
 const rentalSpaceService = require("./rentalSpace.service");
 const { validateRentalSpaceInput } = require("./rentalSpace.validation");
+const catchAsync = require("../../utils/catchAsync");
 
-const createRentalSpace = async (req, res) => {
-    try {
-        const validationError = validateRentalSpaceInput(req.body);
+const createRentalSpace = catchAsync(async (req, res) => {
 
-        if (validationError) {
-            return res.status(400).json({
-                success: false,
-                message: validationError,
-            });
-        }
-
-        const result = await rentalSpaceService.createRentalSpace(req.user.id, req.body);
-
-        res.status(201).json({
-            success: true,
-            message: "Rental space created successfully",
-            data: result,
-        });
-    } catch (error) {
-        res.status(400).json({
-            success: false,
-            message: error.message,
-        });
+    if (validationError) {
+        const error = new Error(validationError);
+        error.statusCode = 400;
+        throw error;
     }
-};
 
-const getAllRentalSpaces = async (req, res) => {
-    try {
-        const result = await rentalSpaceService.getAllRentalSpaces();
+    const result = await rentalSpaceService.createRentalSpace(req.user.id, req.body);
 
-        res.status(200).json({
-            success: true,
-            message: "Rental spaces fetched successfully",
-            data: result,
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message,
-        });
-    }
-};
+    res.status(201).json({
+        success: true,
+        message: "Rental space created successfully",
+        data: result,
+    });
 
-const getSingleRentalSpace = async (req, res) => {
-    try {
-        const result = await rentalSpaceService.getSingleRentalSpace(req.params.id);
+});
 
-        res.status(200).json({
-            success: true,
-            message: "Rental space fetched successfully",
-            data: result,
-        });
-    } catch (error) {
-        res.status(404).json({
-            success: false,
-            message: error.message,
-        });
-    }
-};
+const getAllRentalSpaces = catchAsync(async (req, res) => {
+    const result = await rentalSpaceService.getAllRentalSpaces();
+
+    res.status(200).json({
+        success: true,
+        message: "Rental spaces fetched successfully",
+        data: result,
+    });
+});
+
+const getSingleRentalSpace = catchAsync(async (req, res) => {
+    const result = await rentalSpaceService.getSingleRentalSpace(req.params.id);
+
+    res.status(200).json({
+        success: true,
+        message: "Rental space fetched successfully",
+        data: result,
+    });
+
+});
 
 module.exports = {
     createRentalSpace,

@@ -6,7 +6,9 @@ const createRentalSpace = async (userId, payload) => {
     });
 
     if (!vendorProfile) {
-        throw new Error("Vendor profile not found");
+        const error = new Error("Vendor profile not found");
+        error.statusCode = 404;
+        throw error;
     }
 
     const rentalSpace = await prisma.rentalSpace.create({
@@ -36,7 +38,9 @@ const getSingleRentalSpace = async (id) => {
     });
 
     if (!rentalSpace) {
-        throw new Error("Rental space not found");
+        const error = new Error("Rental space not found");
+        error.statusCode = 404;
+        throw error;
     }
 
     return rentalSpace;

@@ -25,7 +25,9 @@ const getSinglePost = async (id) => {
     });
 
     if (!post) {
-        throw new Error("Post not found");
+        const error = new Error("Post not found");
+        error.statusCode = 404;
+        throw error;
     }
 
     return post;

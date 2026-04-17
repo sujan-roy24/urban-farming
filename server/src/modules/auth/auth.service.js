@@ -10,7 +10,9 @@ const registerUser = async (payload) => {
     });
 
     if (existingUser) {
-        throw new Error("Email already exists");
+        const error = new Error("Email already exists");
+        error.statusCode = 400;
+        throw error;
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -41,13 +43,17 @@ const loginUser = async (payload) => {
     });
 
     if (!user) {
-        throw new Error("Invalid credentials");
+        const error = new Error("Invalid credentials");
+        error.statusCode = 401;
+        throw error;
     }
 
     const isPasswordMatched = await bcrypt.compare(password, user.password);
 
     if (!isPasswordMatched) {
-        throw new Error("Invalid credentials");
+        const error = new Error("Invalid credentials");
+        error.statusCode = 401;
+        throw error;
     }
 
     const token = jwt.sign(

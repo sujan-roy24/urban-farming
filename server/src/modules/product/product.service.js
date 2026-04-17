@@ -6,7 +6,9 @@ const createProduct = async (userId, payload) => {
     });
 
     if (!vendorProfile) {
-        throw new Error("Vendor profile not found");
+        const error = new Error("Vendor profile not found");
+        error.statusCode = 404;
+        throw error;
     }
 
     const product = await prisma.product.create({
@@ -39,7 +41,9 @@ const getSingleProduct = async (id) => {
     });
 
     if (!product) {
-        throw new Error("Product not found");
+        const error = new Error("Product not found");
+        error.statusCode = 404;
+        throw error;
     }
 
     return product;

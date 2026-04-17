@@ -6,7 +6,9 @@ const createVendorProfile = async (userId, payload) => {
     });
 
     if (existingProfile) {
-        throw new Error("Vendor profile already exists");
+        const error = new Error("Vendor profile already exists");
+        error.statusCode = 409;
+        throw error;
     }
 
     const vendorProfile = await prisma.vendorProfile.create({
@@ -26,7 +28,9 @@ const getMyVendorProfile = async (userId) => {
     });
 
     if (!vendorProfile) {
-        throw new Error("Vendor profile not found");
+        const error = new Error("Vendor profile not found");
+        error.statusCode = 404;
+        throw error;
     }
 
     return vendorProfile;

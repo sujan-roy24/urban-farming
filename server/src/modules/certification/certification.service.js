@@ -6,7 +6,9 @@ const submitCertification = async (userId, payload) => {
     });
 
     if (!vendorProfile) {
-        throw new Error("Vendor profile not found");
+        const error = new Error("Vendor profile not found");
+        error.statusCode = 404;
+        throw error;
     }
 
     const certification = await prisma.sustainabilityCert.create({
@@ -26,7 +28,9 @@ const getMyCertifications = async (userId) => {
     });
 
     if (!vendorProfile) {
-        throw new Error("Vendor profile not found");
+        const error = new Error("Vendor profile not found");
+        error.statusCode = 404;
+        throw error;
     }
 
     const certifications = await prisma.sustainabilityCert.findMany({

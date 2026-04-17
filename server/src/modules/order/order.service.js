@@ -6,11 +6,15 @@ const createOrder = async (userId, payload) => {
     });
 
     if (!product) {
-        throw new Error("Product not found");
+        const error = new Error("Product not found");
+        error.statusCode = 404;
+        throw error;
     }
 
     if (product.availableQuantity <= 0) {
-        throw new Error("Product is out of stock");
+        const error = new Error("Product is out of stock");
+        error.statusCode = 400;
+        throw error;
     }
 
     const order = await prisma.order.create({
@@ -47,7 +51,9 @@ const getVendorOrders = async (userId) => {
     });
 
     if (!vendorProfile) {
-        throw new Error("Vendor profile not found");
+        const error = new Error("Vendor profile not found");
+        error.statusCode = 404;
+        throw error;
     }
 
     return prisma.order.findMany({
